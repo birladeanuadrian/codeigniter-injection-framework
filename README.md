@@ -1,4 +1,4 @@
-# codeigniter-injection-framework [Installation](README.md:9) [Usage](README.md:17)
+# codeigniter-injection-framework [Installation](#installation-guide) [Usage](#usage-guide)
 This is a CodeIgniter framework written entirely in PHP using reflection for 
 validation and dependency injection. It is meant to work with, but does not depend on, a
 code completion plugin for PHPStorm. You can find more details on
@@ -6,7 +6,7 @@ code completion plugins on github. The framework uses CodeIgniter post_build hoo
 to inspect the requested controller and method using PHP reflection and then
 validate them and inject configurations and models in class variables. 
 
-## Installation
+## Installation guide
 All source files are in their respective folders, so you must copy them to your project.
 In addition to this, you must also modify the **config/config.php** file. Set the 
 *subclass_prefix* to *'MY_'* and set *enable_hooks* to true. After you've done this,
@@ -14,12 +14,12 @@ declare *STATUS_SUCCESS* and *STATUS_UNSUCCESSFUL* in **config/constants.php** a
 make sure the *url* helper is loaded (either load it in MY_Controller or put it in 
 **config/autoload.php**). That's it.
 
-## Usage
+## Usage Guide
 The framework uses PHPDoc comments to validate methods and classes and inject models
 and configs. Next, we'll take a look at the 3 main files: [**Validator.php**,](README.md:22) 
 [**Injector.php**](README.md:34) and [**ExitHandler.php**](README.md:36)
 
-###Validator
+### Validator
 Is used to validate classes and methods alike. It has 5 methods that can be used:
  - **ajaxRequest**
     - validates an ajax request
