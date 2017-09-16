@@ -46,7 +46,7 @@ class Validator extends PostBuildHook
             $s_arguments = $a_elements[2];
 
             $arg = array('Arguments' => $s_arguments);
-            if (STATUS_SUCCESS !== call_user_func(array($this, $s_method), $arg))
+            if (self::STATUS_SUCCESS !== call_user_func(array($this, $s_method), $arg))
             {
                 $s_message = "Call to $s_method failed";
                 echo $s_message;
@@ -62,7 +62,7 @@ class Validator extends PostBuildHook
                 self::NOT_AJAX_REQUEST_MESSAGE);
         }
         $this->o_exit_handler->set_ajax_request();
-        return STATUS_SUCCESS;
+        return self::STATUS_SUCCESS;
     }
 
     private function permission($arg)
@@ -86,7 +86,7 @@ class Validator extends PostBuildHook
             $this->o_exit_handler->exit_ci(self::PERMISSION_DENIED_HEADER,
                 self::PERMISSION_DENIED_MESSAGE);
         }
-        return STATUS_SUCCESS;
+        return self::STATUS_SUCCESS;
     }
 
     /**
@@ -96,13 +96,13 @@ class Validator extends PostBuildHook
      */
     private function view()
     {
-        return STATUS_SUCCESS;
+        return self::STATUS_SUCCESS;
     }
 
     private function session()
     {
         $this->o_ci->load->library('session');
-        return STATUS_SUCCESS;
+        return self::STATUS_SUCCESS;
     }
 
     /**
@@ -121,7 +121,7 @@ class Validator extends PostBuildHook
         {
             $this->o_ci->a_current_user_info = $a_user_data;
         }
-        return STATUS_SUCCESS;
+        return self::STATUS_SUCCESS;
     }
 
 }

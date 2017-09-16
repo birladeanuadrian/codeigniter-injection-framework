@@ -16,6 +16,9 @@ class PostBuildHook
 
     protected $o_exit_handler;
 
+    const STATUS_SUCCESS = 0;
+    const STATUS_UNSUCCESSFUL = -1;
+
     public function __construct()
     {
         $this->o_ci = &get_instance();

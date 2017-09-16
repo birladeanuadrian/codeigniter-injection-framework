@@ -1,4 +1,10 @@
-# codeigniter-injection-framework [Installation](#installation-guide) [Usage](#usage-guide)
+# codeigniter-injection-framework  
+ 
+ - [Introduction](#introduction)
+ - [Installation](#installation-guide)
+ - [Usage](#usage-guide)  
+ 
+ ## Introduction
 This is a CodeIgniter framework written entirely in PHP using reflection for 
 validation and dependency injection. It is meant to work with, but does not depend on, a
 code completion plugin for PHPStorm. You can find more details on
@@ -9,15 +15,23 @@ validate them and inject configurations and models in class variables.
 ## Installation guide
 All source files are in their respective folders, so you must copy them to your project.
 In addition to this, you must also modify the **config/config.php** file. Set the 
-*subclass_prefix* to *'MY_'* and set *enable_hooks* to true. After you've done this,
-declare *STATUS_SUCCESS* and *STATUS_UNSUCCESSFUL* in **config/constants.php** and 
+*subclass_prefix* to *'MY_'* and set *enable_hooks* to true. After you've done this, 
 make sure the *url* helper is loaded (either load it in MY_Controller or put it in 
-**config/autoload.php**). That's it.
+**config/autoload.php**). If you plan on using the user permission supplied by this 
+framework, then after user login you must save in session user data "userInfo" some 
+information about the user in the following format:
+```php
+    array(
+        'Id' => 0, //optional
+        'Username' => 'john',
+        'Flags' => 3
+    );
+```
 
 ## Usage Guide
 The framework uses PHPDoc comments to validate methods and classes and inject models
-and configs. Next, we'll take a look at the 3 main files: [**Validator.php**,](README.md:22) 
-[**Injector.php**](README.md:34) and [**ExitHandler.php**](README.md:36)
+and configs. Next, we'll take a look at the 3 main files: [**Validator.php**,](#validator) 
+[**Injector.php**](#injector) and [**ExitHandler.php**](#exit-handler)
 
 ### Validator
 Is used to validate classes and methods alike. It has 5 methods that can be used:
@@ -76,6 +90,76 @@ Is used to validate classes and methods alike. It has 5 methods that can be used
     class Controller extends MY_Controller{..}
     ```
  
- ### Injector
+ ### Injector  
+ Is used to inject models and configurations in controllers. It has 2 main functions
+ that can only be applied to variables:
+ - **model**
+    - Injects a model in a class variable visible to the controller (does not work for
+    private variables declared in *MY_Controller* since they are not visible from the 
+    child controller)
+    - is equivalent to `$this->load->model(ModelName, "o_model_name")`
+    ```php
+       class Login extends MY_Controller{
+           /**
+            * @var ModelUser
+            * @model(ModelUser)
+            */
+           private $o_user_model;
+       }
+    ```
+    - a special feature for when the model is known only at runtime is the 
+    *$construct* parameter. Yo use it, initialize the variable in the `__construct()`
+    method with a string representing the name of the model. Once the constructor has 
+    finished executing, the hook will initialize the variable with the given model.
+    In the example below, the model `ModelUser` will be injected in `$o_model`.
+    ```php
+       class Login extends MY_Controller{
+           
+           /**
+            * @model($construct)
+            */
+           private $o_model;
+        
+           public function __construct()
+           {
+               parent::__construct();
+               $this->o_model = 'ModelUser';
+           }
+        
+           public function index()
+           {
+               $a_users = $this->o_model->list_users();
+               ....
+           }
+       }
+    ```
+    - if the hook fails to load the model, the exit handler is called
+    
+ - **config**
+    - This function loads a configuration item into a variable. It is equivalent to
+    `$this->variable = $this->config->item("some_config_item")`
+    - it also accepts an optional secondary variable stating the expected type of the 
+    config item. If loading the config failed or if the types do not match, 
+    then the exit handler is called.
+    ```php
+       /**
+        * @config(item, array)
+        */
+       private $a_var;
+    ```
+    - the config item can also be specified at run time if the *$construct* parameter 
+    is used
+    ```php
+       /**
+        * @config($construct, integer)
+        */
+       private $a_var;
+    ```
  
- ### ExitHandler
+ ### Exit Handler
+ Contains methods that are called when validations or injections fail. The main functions
+ that are called are `set_ajax_request()` (that should not be tampered with unless you 
+ know what you're doing), `redirect_login()` and `exit_ci()`. The last two are application
+ dependant and should be modified by developers according to their needs. This class
+ should not suffer any modifications and should remain unchanged when updating the
+ framework.

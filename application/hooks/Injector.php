@@ -32,7 +32,7 @@ class Injector extends PostBuildHook
 
 
                 $arg = array('Prop' => $o_prop, 'Arguments' => $s_arguments);
-                if (STATUS_SUCCESS !== call_user_func(array($this, $s_method), $arg))
+                if (self::STATUS_SUCCESS !== call_user_func(array($this, $s_method), $arg))
                 {
                     $s_message = "Call to $s_method failed";
                     $this->o_exit_handler->exit_ci("Internal Server Error", $s_message);
@@ -40,7 +40,7 @@ class Injector extends PostBuildHook
             }
         }
 
-        return STATUS_SUCCESS;
+        return self::STATUS_SUCCESS;
     }
 
     private function model($arg)
@@ -58,7 +58,8 @@ class Injector extends PostBuildHook
             $s_model = $o_prop->getValue($this->o_ci);
             if ($s_model == null) {
                 $message = "You must set " . $arg['Prop'] . " to the name of the model received in the construct.\n";
-                return STATUS_UNSUCCESSFUL;
+                $this->o_exit_handler->exit_ci("Internal Server Error", $message);
+                return self::STATUS_UNSUCCESSFUL;
             }
             $o_prop->setAccessible(false);
         }
@@ -66,13 +67,13 @@ class Injector extends PostBuildHook
         $this->o_ci->load->model($s_model);
         if (empty($this->o_ci->$s_model))
         {
-            return STATUS_UNSUCCESSFUL;
+            return self::STATUS_UNSUCCESSFUL;
         }
 
         $o_prop->setAccessible(true);
         $o_prop->setValue($this->o_ci, $this->o_ci->$s_model);
         $o_prop->setAccessible(false);
-        return STATUS_SUCCESS;
+        return self::STATUS_SUCCESS;
     }
 
     private function config($arg)
@@ -96,14 +97,14 @@ class Injector extends PostBuildHook
             if ($s_item === null) {
                 $message = "You must set $s_item to the name of the config received in the construct.\n";
                 $this->o_exit_handler->exit_ci("Internal Server Error", $message);
-                return STATUS_UNSUCCESSFUL;
+                return self::STATUS_UNSUCCESSFUL;
             }
             $o_prop->setAccessible(false);
         }
 
         if ($s_item === false)
         {
-            return STATUS_SUCCESS;
+            return self::STATUS_SUCCESS;
         }
 
         $m_config = $this->o_ci->config->item($s_item);
@@ -132,6 +133,6 @@ class Injector extends PostBuildHook
         $o_prop->setValue($this->o_ci, $m_config);
         $o_prop->setAccessible(false);
 
-        return STATUS_SUCCESS;
+        return self::STATUS_SUCCESS;
     }
 }
