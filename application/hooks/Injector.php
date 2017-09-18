@@ -19,8 +19,7 @@ class Injector extends PostBuildHook
          */
         foreach ($a_properties as $o_prop)
         {
-            $s_docs = $o_prop->getDocComment();
-            $a_annotations = $this->get_php_doc_arguments($s_docs);
+            $a_annotations = $this->get_annotations($o_prop);
             foreach ($a_annotations as $s_annotation)
             {
                 preg_match('/([\w\_\d]+)\(([\w\W]*)\)/', $s_annotation, $a_elements);
@@ -112,8 +111,6 @@ class Injector extends PostBuildHook
         $b_has_type = true;
         if (count($a_arguments) === 1)
         {
-
-            $s_message = "Config $s_config_name does not have a defined type";
             $b_has_type = false;
         }
 

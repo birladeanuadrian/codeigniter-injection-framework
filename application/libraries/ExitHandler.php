@@ -36,12 +36,7 @@ class ExitHandler
 
     private function exit_ajax($s_header, $s_message)
     {
-        $i_http_status = HTTP_INTERNAL_SERVER_ERROR;
-        $i_exit_status = STATUS_UNSUCCESSFUL;
-
-        $s_message = json_encode(array("Error" => "$s_header; $s_message"));
-
-        h_encode_and_send_json_response($i_http_status, $s_message, $i_exit_status);
+        echo json_encode(array("Error" => "$s_header; $s_message"));
     }
 
     private function exit_view($s_header, $s_message)

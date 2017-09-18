@@ -59,15 +59,6 @@ Is used to validate classes and methods alike. It has 5 methods that can be used
     class Writer extends MY_Controller{...}
     ```
     
- - **view**
-    - does nothing except to mark that a method or a class is loading a view
-    ```php
-    /**
-     * @view()
-     */
-    public function index(){..}
-    ```
-    
  - **session**
     - loads the session library for a class or method
     - using the **session** annotation means you can't use session in the constructor.

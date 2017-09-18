@@ -79,23 +79,12 @@ class Validator extends PostBuildHook
         }
 
         $i_user_flags = $this->o_ci->_get_logged_user_flags();
-        $s_user = $this->o_ci->_get_logged_user_name();
 
         if (!($i_permission_flag & $i_user_flags))
         {
             $this->o_exit_handler->exit_ci(self::PERMISSION_DENIED_HEADER,
                 self::PERMISSION_DENIED_MESSAGE);
         }
-        return self::STATUS_SUCCESS;
-    }
-
-    /**
-     * Used only to mark that a method or a class loads a view
-     * Does not do anything
-     * @return int
-     */
-    private function view()
-    {
         return self::STATUS_SUCCESS;
     }
 
@@ -115,7 +104,7 @@ class Validator extends PostBuildHook
         if (!is_array($a_user_data))
         {
             $this->o_ci->session->set_userdata("CurrentUrl", current_url());
-            redirect(site_url(array('login')));
+            $this->o_exit_handler->redirect_login();
         }
         else
         {

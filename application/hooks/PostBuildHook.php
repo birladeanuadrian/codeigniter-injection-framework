@@ -30,7 +30,7 @@ class PostBuildHook
     }
 
     /**
-     * @param $o_reflection ReflectionClass|ReflectionMethod
+     * @param $o_reflection ReflectionClass|ReflectionMethod|ReflectionProperty
      */
     protected function get_annotations($o_reflection)
     {
@@ -44,7 +44,7 @@ class PostBuildHook
         return $a_annotations;
     }
 
-    protected function get_php_doc_arguments($s_php_doc)
+    private function get_php_doc_arguments($s_php_doc)
     {
         preg_match_all('#@(.*?)\n#s', $s_php_doc, $annotations);
         return $annotations[1];
